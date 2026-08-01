@@ -56,7 +56,14 @@ export default function PropertyDetailPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ propertyId: id }),
+        body: JSON.stringify({
+          propertyId: id,
+          startDate: new Date().toISOString(),
+          endDate: new Date(
+            new Date().setMonth(new Date().getMonth() + 1)
+          ).toISOString(),
+          totalPrice: property?.price,
+        }),
       });
 
       const result = await res.json();

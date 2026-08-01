@@ -20,7 +20,7 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  
+
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -69,9 +69,26 @@ export default function DashboardLayout({
     switch (user?.role) {
       case 'OWNER':
         return [
-          { name: 'ওভারভিউ', href: '/dashboard/owner', icon: '📊' },
-          { name: 'নতুন প্রপার্টি এড', href: '/dashboard/owner/properties/new', icon: '➕' },
-          { name: 'ভাড়ার রিকোয়েস্টসমূহ', href: '/dashboard/owner/requests', icon: '📩' },
+          {
+            name: 'Dashboard',
+            href: '/dashboard/owner',
+            icon: '📊',
+          },
+          {
+            name: 'My Properties',
+            href: '/dashboard/owner/properties',
+            icon: '🏠',
+          },
+          {
+            name: 'Add Property',
+            href: '/dashboard/owner/properties/new',
+            icon: '➕',
+          },
+          {
+            name: 'Rental Requests',
+            href: '/dashboard/owner/requests',
+            icon: '📩',
+          },
         ];
       case 'ADMIN':
         return [
@@ -104,11 +121,10 @@ export default function DashboardLayout({
               <Link
                 key={link.href}
                 href={link.href}
-                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                  isActive
+                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${isActive
                     ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200 dark:shadow-none'
                     : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
-                }`}
+                  }`}
               >
                 <span>{link.icon}</span>
                 {link.name}
@@ -165,11 +181,10 @@ export default function DashboardLayout({
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold ${
-                    pathname === link.href
+                  className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold ${pathname === link.href
                       ? 'bg-indigo-600 text-white'
                       : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
-                  }`}
+                    }`}
                 >
                   <span>{link.icon}</span>
                   {link.name}

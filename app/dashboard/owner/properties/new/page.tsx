@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,18 +8,34 @@ import { z } from 'zod';
 import Cookies from 'js-cookie';
 
 const propertySchema = z.object({
-  title: z.string().min(5, { message: 'টাইটেল অন্তত ৫ অক্ষরের হতে হবে' }),
-  description: z.string().min(10, { message: 'বিবরণ অন্তত ১০ অক্ষরের হতে হবে' }),
-  price: z.coerce.number().min(1000, { message: 'দাম সঠিক নয়' }),
-  location: z.string().min(3, { message: 'লোকেশন লিখুন' }),
-  imageUrl: z.string().url({ message: 'একটি সঠিক ইমেজের লিংক দিন' }),
+  title: z.string().min(5, {
+    message: 'টাইটেল অন্তত ৫ অক্ষরের হতে হবে',
+  }),
+  description: z.string().min(10, {
+    message: 'বিবরণ অন্তত ১০ অক্ষরের হতে হবে',
+  }),
+  price: z.coerce.number().min(1000, {
+    message: 'দাম সঠিক নয়',
+  }),
+  location: z.string().min(3, {
+    message: 'লোকেশন লিখুন',
+  }),
+  categoryId: z.string().min(1, {
+    message: 'ক্যাটাগরি নির্বাচন করুন',
+  }),
 });
 
-// type PropertyFormData = z.infer<typeof propertySchema>;
-type PropertyFormData = z.input<typeof propertySchema>;
+type PropertyFormData = z.infer<typeof propertySchema>;
+
+interface Category {
+  id: string;
+  name: string;
+}
 
 export default function CreatePropertyPage() {
   const router = useRouter();
+
+  const [categories, setCategories] = useState<Category[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,6 +47,24 @@ export default function CreatePropertyPage() {
     resolver: zodResolver(propertySchema),
   });
 
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const res = await fetch(
+          'https://rentnest-backend-sage.vercel.app/api/categories'
+        );
+
+        const result = await res.json();
+
+        setCategories(result?.data || []);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    fetchCategories();
+  }, []);
+
   const onSubmit = async (data: PropertyFormData) => {
     setIsLoading(true);
     setError(null);
@@ -38,30 +72,33 @@ export default function CreatePropertyPage() {
     const token = Cookies.get('token');
 
     try {
-      const res = await fetch('https://rentnest-backend-sage.vercel.app/api/properties', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          title: data.title,
-          description: data.description,
-          price: data.price,
-          location: data.location,
-          images: [data.imageUrl],
-        }),
-      });
+      const res = await fetch(
+        'https://rentnest-backend-sage.vercel.app/api/properties',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: data.title,
+            description: data.description,
+            price: data.price,
+            location: data.location,
+            categoryId: data.categoryId,
+          }),
+        }
+      );
 
       const result = await res.json();
 
       if (!res.ok) {
-        throw new Error(result.message || 'প্রপার্টি ক্রিয়েট করা সম্ভব হয়নি');
+        throw new Error(result.message || 'প্রপার্টি তৈরি করা যায়নি');
       }
 
       router.push('/dashboard/owner');
     } catch (err: any) {
-      setError(err.message || 'কোথাও কোনো ভুল হয়েছে');
+      setError(err.message || 'কিছু একটা ভুল হয়েছে');
     } finally {
       setIsLoading(false);
     }
@@ -69,79 +106,130 @@ export default function CreatePropertyPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">নতুন প্রপার্টি লিস্ট করুন 🏠</h1>
-      <p className="mt-1 text-sm text-gray-500">আপনার প্রপার্টির তথ্য পূরণ করে প্রকাশ করুন</p>
+      <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">
+        নতুন প্রপার্টি লিস্ট করুন 🏠
+      </h1>
+
+      <p className="mt-2 text-sm text-gray-500">
+        আপনার প্রপার্টির তথ্য পূরণ করে প্রকাশ করুন
+      </p>
 
       {error && (
-        <div className="mt-4 rounded-md bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">
+        <div className="mt-5 rounded-lg bg-red-100 p-3 text-sm text-red-700">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
+        {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">প্রপার্টি টাইটেল</label>
+          <label className="mb-1 block text-sm font-medium">
+            প্রপার্টি টাইটেল
+          </label>
+
           <input
             {...register('title')}
             type="text"
-            placeholder="উদাহরণ: ২ বেডরুমের অ্যাপার্টমেন্ট"
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900"
+            placeholder="২ বেডরুমের অ্যাপার্টমেন্ট"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
           />
-          {errors.title && <p className="mt-1 text-xs text-red-600">{errors.title.message}</p>}
+
+          {errors.title && (
+            <p className="mt-1 text-xs text-red-600">
+              {errors.title.message}
+            </p>
+          )}
         </div>
 
+        {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">বিবরণ</label>
+          <label className="mb-1 block text-sm font-medium">বিবরণ</label>
+
           <textarea
             {...register('description')}
-            rows={3}
-            placeholder="প্রপার্টির বিস্তারিত বিবরণ..."
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900"
+            rows={4}
+            placeholder="প্রপার্টির বিস্তারিত লিখুন..."
+            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
           />
-          {errors.description && <p className="mt-1 text-xs text-red-600">{errors.description.message}</p>}
+
+          {errors.description && (
+            <p className="mt-1 text-xs text-red-600">
+              {errors.description.message}
+            </p>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">ভাড়া (মাসিক ৳)</label>
-            <input
-              {...register('price')}
-              type="number"
-              placeholder="15000"
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900"
-            />
-            {errors.price && <p className="mt-1 text-xs text-red-600">{errors.price.message}</p>}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">লোকেশন</label>
-            <input
-              {...register('location')}
-              type="text"
-              placeholder="মিরপুর ১০, ঢাকা"
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900"
-            />
-            {errors.location && <p className="mt-1 text-xs text-red-600">{errors.location.message}</p>}
-          </div>
-        </div>
-
+        {/* Price */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">ছবি URL</label>
+          <label className="mb-1 block text-sm font-medium">
+            মাসিক ভাড়া
+          </label>
+
           <input
-            {...register('imageUrl')}
-            type="url"
-            placeholder="https://images.unsplash.com/photo-..."
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900"
+            {...register('price')}
+            type="number"
+            placeholder="15000"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
           />
-          {errors.imageUrl && <p className="mt-1 text-xs text-red-600">{errors.imageUrl.message}</p>}
+
+          {errors.price && (
+            <p className="mt-1 text-xs text-red-600">
+              {errors.price.message}
+            </p>
+          )}
         </div>
 
+        {/* Location */}
+        <div>
+          <label className="mb-1 block text-sm font-medium">লোকেশন</label>
+
+          <input
+            {...register('location')}
+            type="text"
+            placeholder="মিরপুর ১০, ঢাকা"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
+          />
+
+          {errors.location && (
+            <p className="mt-1 text-xs text-red-600">
+              {errors.location.message}
+            </p>
+          )}
+        </div>
+
+        {/* Category */}
+        <div>
+          <label className="mb-1 block text-sm font-medium">
+            ক্যাটাগরি
+          </label>
+
+          <select
+            {...register('categoryId')}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
+          >
+            <option value="">ক্যাটাগরি নির্বাচন করুন</option>
+
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+
+          {errors.categoryId && (
+            <p className="mt-1 text-xs text-red-600">
+              {errors.categoryId.message}
+            </p>
+          )}
+        </div>
+
+        {/* Submit */}
         <button
           type="submit"
           disabled={isLoading}
-          className="mt-6 w-full rounded-lg bg-indigo-600 py-3 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
+          className="w-full rounded-lg bg-indigo-600 py-3 font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isLoading ? 'পাবলিশ হচ্ছে...' : 'পাবলিশ করুন 🚀'}
+          {isLoading ? 'Publishing...' : 'Publish Property 🚀'}
         </button>
       </form>
     </div>

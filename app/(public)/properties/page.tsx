@@ -141,8 +141,11 @@ export default function PropertiesPage() {
                     <Image
                       src={propertyImages[index % propertyImages.length]}
                       alt={item.title}
+                       loading={index === 0 ? "eager" : "lazy"}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       fill
                       className="object-cover"
+                      
                     />
                   </div>
                   <div className="p-4">

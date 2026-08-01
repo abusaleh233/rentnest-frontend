@@ -22,7 +22,7 @@ export default function OwnerRequestsPage() {
   async function fetchRequests() {
     const token = Cookies.get('token');
     try {
-      const res = await fetch('https://rentnest-backend-sage.vercel.app/api/landlord/requests', {
+      const res = await fetch("https://rentnest-backend-sage.vercel.app/api/rentals", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -40,7 +40,7 @@ export default function OwnerRequestsPage() {
     const token = Cookies.get('token');
 
     try {
-      const res = await fetch(`https://rentnest-backend-sage.vercel.app/api/landlord/requests/${id}`, {
+      const res = await fetch(`https://rentnest-backend-sage.vercel.app/api/rentals/${id}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
