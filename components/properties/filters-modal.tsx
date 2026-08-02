@@ -69,7 +69,7 @@ export function FiltersModal({ isOpen, onClose, onApply }: FiltersModalProps) {
               type="submit"
               className="w-full rounded-lg bg-indigo-600 py-2 text-xs font-semibold text-white hover:bg-indigo-700"
             >
-              ফিল্টার প্রয়োগ করুন
+              Apply Filters
             </button>
           </div>
         </form>
