@@ -63,7 +63,7 @@ export function FiltersModal({ isOpen, onClose, onApply }: FiltersModalProps) {
               onClick={onClose}
               className="w-full rounded-lg border border-gray-300 py-2 text-xs font-semibold dark:border-gray-700"
             >
-              বাতিল
+              Cancel
             </button>
             <button
               type="submit"
