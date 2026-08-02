@@ -45,7 +45,7 @@ export default function AdminDashboardPage() {
           totalRentals: rentals.length,
         });
       } catch (err: any) {
-        setError(err.message || 'অ্যাডমিন ডাটা লোড করতে সমস্যা হয়েছে');
+        setError(err.message || 'Failed to load admin data');
       } finally {
         setIsLoading(false);
       }
@@ -86,17 +86,17 @@ export default function AdminDashboardPage() {
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
           <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-800">
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">মোট নিবন্ধিত ইউজার</p>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Registered Users</p>
             <p className="mt-2 text-4xl font-extrabold text-indigo-600">{stats.totalUsers}</p>
           </div>
 
           <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-800">
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">মোট প্রপার্টি লিস্ট</p>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Property Listings</p>
             <p className="mt-2 text-4xl font-extrabold text-blue-600">{stats.totalProperties}</p>
           </div>
 
           <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-800">
-            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">মোট রেন্টাল রিকোয়েস্ট</p>
+            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Rental Requests</p>
             <p className="mt-2 text-4xl font-extrabold text-green-600">{stats.totalRentals}</p>
           </div>
         </div>

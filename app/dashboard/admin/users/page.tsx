@@ -52,7 +52,7 @@ export default function AdminUsersPage() {
         throw new Error('Failed to delete user.');
       }
 
-      // UI থেকে ইউজার রিমুভ করা
+      
       setUsers((prev) => prev.filter((user) => user.id !== id));
     } catch (err: any) {
       alert(err.message || 'Something went wrong.');
