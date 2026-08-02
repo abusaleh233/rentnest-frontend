@@ -7,132 +7,208 @@ import Cookies from 'js-cookie';
 interface RentalRequest {
   id: string;
   status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
-  createdAt: string;
   property: {
-    id: string;
     title: string;
-    price: number;
     location: string;
+    price: number;
   };
 }
 
-export default function TenantDashboard() {
+export default function UserDashboardPage() {
   const [requests, setRequests] = useState<RentalRequest[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchUserRentals() {
+    loadDashboard();
+  }, []);
+
+  async function loadDashboard() {
+    try {
       const token = Cookies.get('token');
-      try {
-        const res = await fetch('https://rentnest-backend-sage.vercel.app/api/rentals', {
+
+      const res = await fetch(
+        'https://rentnest-backend-sage.vercel.app/api/rentals',
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        });
-        const data = await res.json();
+        }
+      );
 
-        if (!res.ok) throw new Error(data.message || 'ডেটা লোড করতে ব্যর্থ হয়েছে');
-
-        const list = Array.isArray(data) ? data : data?.data || [];
-        setRequests(list);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
+      const result = await res.json();
+      setRequests(result.data || []);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
     }
+  }
 
-    fetchUserRentals();
-  }, []);
+  const total = requests.length;
+  const pending = requests.filter(r => r.status === 'PENDING').length;
+  const approved = requests.filter(r => r.status === 'APPROVED').length;
+  const rejected = requests.filter(r => r.status === 'REJECTED').length;
 
-  const getStatusBadge = (status: RentalRequest['status']) => {
-    switch (status) {
-      case 'APPROVED':
-        return <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-800 border border-blue-300">APPROVED</span>;
-      case 'PENDING':
-        return <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-800 border border-yellow-300">PENDING</span>;
-      case 'REJECTED':
-        return <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-800 border border-red-300">REJECTED</span>;
-      case 'CANCELLED':
-        return <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-800 border border-gray-300">CANCELLED</span>;
-      default:
-        return null;
-    }
-  };
+  if (loading) {
+    return (
+      <div className="flex h-[70vh] items-center justify-center">
+        Loading Dashboard...
+      </div>
+    );
+  }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
+    <div className="mx-auto max-w-7xl p-8">
+
+      {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Tenant Dashboard 🏠</h1>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          আপনার সকল রেন্ট রিকোয়েস্ট এবং পেমেন্ট স্ট্যাটাস দেখুন
+        <h1 className="text-4xl font-bold">
+          🏠 User Dashboard
+        </h1>
+
+        <p className="mt-2 text-gray-500">
+          Welcome back! Manage your rental requests and payments.
         </p>
       </div>
 
-      {error && (
-        <div className="mb-6 rounded-lg bg-red-50 p-4 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400">
-          {error}
-        </div>
-      )}
+      {/* Statistics */}
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
 
-      {isLoading ? (
-        <div className="space-y-4">
-          {[1, 2, 3].map((n) => (
-            <div key={n} className="h-20 w-full animate-pulse rounded-xl bg-gray-200 dark:bg-gray-800" />
-          ))}
+        <div className="rounded-xl bg-white p-6 shadow">
+          <p className="text-gray-500">Total Requests</p>
+          <h2 className="mt-2 text-4xl font-bold text-indigo-600">
+            {total}
+          </h2>
         </div>
-      ) : requests.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-gray-300 p-12 text-center dark:border-gray-800">
-          <p className="text-gray-500">আপনি এখনও কোনো রেন্ট রিকোয়েস্ট পাঠাবেননি।</p>
+
+        <div className="rounded-xl bg-white p-6 shadow">
+          <p className="text-gray-500">Pending</p>
+          <h2 className="mt-2 text-4xl font-bold text-yellow-500">
+            {pending}
+          </h2>
+        </div>
+
+        <div className="rounded-xl bg-white p-6 shadow">
+          <p className="text-gray-500">Approved</p>
+          <h2 className="mt-2 text-4xl font-bold text-green-600">
+            {approved}
+          </h2>
+        </div>
+
+        <div className="rounded-xl bg-white p-6 shadow">
+          <p className="text-gray-500">Rejected</p>
+          <h2 className="mt-2 text-4xl font-bold text-red-600">
+            {rejected}
+          </h2>
+        </div>
+
+      </div>
+
+      {/* Quick Actions */}
+      <div className="mt-10">
+
+        <h2 className="mb-5 text-2xl font-bold">
+          ⚡ Quick Actions
+        </h2>
+
+        <div className="grid gap-6 md:grid-cols-3">
+
           <Link
             href="/properties"
-            className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+            className="rounded-xl bg-indigo-600 p-6 text-white shadow transition hover:scale-105"
           >
-            প্রপার্টি ব্রাউজ করুন
+            <div className="text-5xl">🏠</div>
+
+            <h3 className="mt-4 text-xl font-bold">
+              Browse Properties
+            </h3>
+
+            <p className="mt-2 text-sm opacity-90">
+              Find your next rental home.
+            </p>
           </Link>
+
+          <Link
+            href="/dashboard/user/payment-history"
+            className="rounded-xl bg-green-600 p-6 text-white shadow transition hover:scale-105"
+          >
+            <div className="text-5xl">💳</div>
+
+            <h3 className="mt-4 text-xl font-bold">
+              Payment History
+            </h3>
+
+            <p className="mt-2 text-sm opacity-90">
+              View all your completed payments.
+            </p>
+          </Link>
+
+
+
+          <Link
+            href="/dashboard/user/requests"
+            className="rounded-xl bg-orange-500 p-6 text-white shadow transition hover:scale-105"
+          >
+            <div className="text-5xl">📩</div>
+
+            <h3 className="mt-4 text-xl font-bold">
+              My Requests
+            </h3>
+
+            <p className="mt-2 text-sm opacity-90">
+              Track your rental requests.
+            </p>
+          </Link>
+
         </div>
-      ) : (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-800">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
-              <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-4">প্রপার্টির নাম</th>
-                  <th scope="col" className="px-6 py-4">লোকেশন</th>
-                  <th scope="col" className="px-6 py-4">ভাড়া (মাসিক)</th>
-                  <th scope="col" className="px-6 py-4">স্ট্যাটাস</th>
-                  <th scope="col" className="px-6 py-4 text-right">অ্যাকশন</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                {requests.map((item) => (
-                  <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                    <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                      {item.property?.title || 'N/A'}
-                    </td>
-                    <td className="px-6 py-4">{item.property?.location || 'N/A'}</td>
-                    <td className="px-6 py-4 font-bold text-indigo-600">৳{item.property?.price}</td>
-                    <td className="px-6 py-4">{getStatusBadge(item.status)}</td>
-                    <td className="px-6 py-4 text-right">
-                      {item.status === 'APPROVED' ? (
-                        <Link
-                          href={`/dashboard/user/requests/${item.id}/pay`}
-                          className="rounded-lg bg-indigo-600 px-4 py-2 text-xs font-semibold text-white hover:bg-indigo-700 shadow-sm"
-                        >
-                          Pay Now 💳
-                        </Link>
-                      ) : (
-                        <span className="text-xs text-gray-400">অপেক্ষা করুন</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <div className="mt-12">
+          <div className="mb-5 flex items-center justify-between">
+            <h2 className="text-2xl font-bold">
+              Recent Requests
+            </h2>
+          </div>
+
+          <div className="space-y-4">
+            {requests.slice(0, 5).map((item) => (
+              <div
+                key={item.id}
+                className="flex items-center justify-between rounded-xl border p-5"
+              >
+                <div>
+                  <h3 className="font-bold">
+                    {item.property.title}
+                  </h3>
+
+                  <p className="text-sm text-gray-500">
+                    {item.property.location}
+                  </p>
+                </div>
+
+                <div className="flex gap-2">
+
+                  <Link
+                    href={`/dashboard/user/requests/${item.id}`}
+                    className="rounded bg-blue-600 px-4 py-2 text-white"
+                  >
+                    View
+                  </Link>
+
+                  {item.status === "APPROVED" && (
+                    <Link
+                      href={`/dashboard/user/requests/${item.id}/pay`}
+                      className="rounded bg-green-600 px-4 py-2 text-white"
+                    >
+                      Pay
+                    </Link>
+                  )}
+
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      )}
+
+      </div>
     </div>
   );
 }

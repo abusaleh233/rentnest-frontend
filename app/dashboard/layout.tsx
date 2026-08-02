@@ -98,8 +98,26 @@ export default function DashboardLayout({
       case 'USER':
       default:
         return [
-          { name: 'আমার রিকোয়েস্টসমূহ', href: '/dashboard/user', icon: '🏠' },
-          { name: 'প্রপার্টি ব্রাউজ করুন', href: '/properties', icon: '🔍' },
+          {
+            name: 'Dashboard',
+            href: '/dashboard/user',
+            icon: '🏠',
+          },
+          {
+            name: 'Browse Properties',
+            href: '/properties',
+            icon: '🔍',
+          },
+          {
+            name: 'Payment History',
+            href: '/dashboard/user/payment-history',
+            icon: '💳',
+          },
+          {
+            name: 'Profile',
+            href: '/dashboard/user/profile',
+            icon: '👤',
+          },
         ];
     }
   };
@@ -122,8 +140,8 @@ export default function DashboardLayout({
                 key={link.href}
                 href={link.href}
                 className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${isActive
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200 dark:shadow-none'
-                    : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200 dark:shadow-none'
+                  : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
                   }`}
               >
                 <span>{link.icon}</span>
@@ -182,8 +200,8 @@ export default function DashboardLayout({
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold ${pathname === link.href
-                      ? 'bg-indigo-600 text-white'
-                      : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                    ? 'bg-indigo-600 text-white'
+                    : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
                     }`}
                 >
                   <span>{link.icon}</span>
