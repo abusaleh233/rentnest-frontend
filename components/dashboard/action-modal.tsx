@@ -14,7 +14,7 @@ export function ActionModal({
   isOpen,
   title,
   description,
-  confirmText = 'নিশ্চিত করুন',
+  confirmText = 'Confirm',
   isLoading = false,
   onClose,
   onConfirm,
