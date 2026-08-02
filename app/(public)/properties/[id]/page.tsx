@@ -27,20 +27,25 @@ export default function PropertyDetailPage() {
   useEffect(() => {
     async function fetchDetails() {
       try {
-        const res = await fetch(`https://rentnest-backend-sage.vercel.app/api/properties/${id}`);
+        const res = await fetch(
+          `https://rentnest-backend-sage.vercel.app/api/properties/${id}`
+        );
+
         const data = await res.json();
         setProperty(data?.data || data);
       } catch (err) {
-        console.error('Error details fetch:', err);
+        console.error('Error fetching property details:', err);
       } finally {
         setIsLoading(false);
       }
     }
+
     fetchDetails();
   }, [id]);
 
   const handleRentalRequest = async () => {
     const token = Cookies.get('token');
+
     if (!token) {
       router.push('/login');
       return;
@@ -50,72 +55,105 @@ export default function PropertyDetailPage() {
     setMessage(null);
 
     try {
-      const res = await fetch('https://rentnest-backend-sage.vercel.app/api/rentals', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          propertyId: id,
-          startDate: new Date().toISOString(),
-          endDate: new Date(
-            new Date().setMonth(new Date().getMonth() + 1)
-          ).toISOString(),
-          totalPrice: property?.price,
-        }),
-      });
+      const res = await fetch(
+        'https://rentnest-backend-sage.vercel.app/api/rentals',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            propertyId: id,
+            startDate: new Date().toISOString(),
+            endDate: new Date(
+              new Date().setMonth(new Date().getMonth() + 1)
+            ).toISOString(),
+            totalPrice: property?.price,
+          }),
+        }
+      );
 
       const result = await res.json();
 
       if (!res.ok) {
-        throw new Error(result.message || 'রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে।');
+        throw new Error(
+          result.message || 'Failed to submit rental request.'
+        );
       }
 
-      setMessage('আপনার রেন্ট রিকোয়েস্ট সফলভাবে পাঠানো হয়েছে! মালিক অনুমোদন দেওয়া পর্যন্ত অপেক্ষা করুন।');
+      setMessage(
+        'Your rental request has been submitted successfully! Please wait for the property owner to approve it.'
+      );
     } catch (error: any) {
-      setMessage(error.message || 'একটি ত্রুটি ঘটেছে');
+      setMessage(error.message || 'Something went wrong.');
     } finally {
       setRequestLoading(false);
     }
   };
 
   if (isLoading) {
-    return <div className="p-8 text-center">প্রপার্টি ডিটেইলস লোড হচ্ছে...</div>;
+    return (
+      <div className="p-8 text-center">
+        Loading property details...
+      </div>
+    );
   }
 
   if (!property) {
-    return <div className="p-8 text-center text-red-500">প্রপার্টিটি পাওয়া যায়নি!</div>;
+    return (
+      <div className="p-8 text-center text-red-500">
+        Property not found!
+      </div>
+    );
   }
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       {/* Title */}
-      <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">{property.title}</h1>
-      <p className="mt-1 text-sm text-gray-500">{property.location}</p>
+      <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">
+        {property.title}
+      </h1>
+
+      <p className="mt-1 text-sm text-gray-500">
+        {property.location}
+      </p>
 
       {/* Image Gallery */}
       <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-        <div className="relative h-80 md:col-span-2 rounded-2xl overflow-hidden bg-gray-100">
+        <div className="relative h-80 overflow-hidden rounded-2xl bg-gray-100 md:col-span-2">
           <Image
-            src={property.images?.[0] || 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85'}
+            src={
+              property.images?.[0] ||
+              'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85'
+            }
             alt={property.title}
             fill
             className="object-cover"
           />
         </div>
+
         <div className="flex flex-col gap-4">
-          <div className="relative h-36 rounded-xl overflow-hidden bg-gray-100">
+          <div className="relative h-36 overflow-hidden rounded-xl bg-gray-100">
             <Image
-              src={property.images?.[1] || property.images?.[0] || 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85'}
+              src={
+                property.images?.[1] ||
+                property.images?.[0] ||
+                'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85'
+              }
               alt={property.title}
               fill
               className="object-cover"
             />
           </div>
-          <div className="relative h-36 rounded-xl overflow-hidden bg-gray-100">
+
+          <div className="relative h-36 overflow-hidden rounded-xl bg-gray-100">
             <Image
-              src={property.images?.[2] || property.images?.[0] || 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85'}
+              src={
+                property.images?.[2] ||
+                property.images?.[0] ||
+                'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85'
+              }
               alt={property.title}
               fill
               className="object-cover"
@@ -126,23 +164,35 @@ export default function PropertyDetailPage() {
 
       {/* Details & CTA */}
       <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-3">
-        <div className="md:col-span-2 space-y-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">বিবরণ</h2>
-          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-            {property.description || 'এই প্রপার্টির কোনো বিস্তারিত বিবরণ দেওয়া নেই।'}
+        <div className="space-y-4 md:col-span-2">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+            Description
+          </h2>
+
+          <p className="leading-relaxed text-gray-600 dark:text-gray-300">
+            {property.description ||
+              'No description is available for this property.'}
           </p>
 
           {property.owner && (
-            <div className="rounded-xl border border-gray-200 p-4 mt-6 dark:border-gray-800">
-              <h3 className="font-semibold text-gray-900 dark:text-white">বাড়িওয়ালার তথ্য</h3>
-              <p className="text-sm text-gray-500">{property.owner.name}</p>
+            <div className="mt-6 rounded-xl border border-gray-200 p-4 dark:border-gray-800">
+              <h3 className="font-semibold text-gray-900 dark:text-white">
+                Property Owner
+              </h3>
+
+              <p className="text-sm text-gray-500">
+                {property.owner.name}
+              </p>
             </div>
           )}
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm h-fit dark:border-gray-800 dark:bg-gray-800">
+        <div className="h-fit rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-800">
           <div className="text-2xl font-extrabold text-indigo-600">
-            ৳{property.price} <span className="text-xs font-normal text-gray-500">/ মাস</span>
+            ৳{property.price}{' '}
+            <span className="text-xs font-normal text-gray-500">
+              / month
+            </span>
           </div>
 
           {message && (
@@ -156,7 +206,9 @@ export default function PropertyDetailPage() {
             disabled={requestLoading}
             className="mt-6 w-full rounded-lg bg-indigo-600 py-3 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
           >
-            {requestLoading ? 'রিকোয়েস্ট প্রসেসিং...' : 'Request to Rent 🏠'}
+            {requestLoading
+              ? 'Submitting Request...'
+              : 'Request to Rent 🏠'}
           </button>
         </div>
       </div>

@@ -61,7 +61,7 @@ export default function OwnerPropertiesPage() {
 
   async function handleDelete(id: string) {
     const confirmDelete = window.confirm(
-      'আপনি কি এই Property Delete করতে চান?'
+      'Are you sure you want to delete this property?'
     );
 
     if (!confirmDelete) return;

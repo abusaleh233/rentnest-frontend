@@ -12,17 +12,16 @@ interface Property {
   images: string[];
 }
 
-
 const propertyImages = [
-  "/images/image1.jpg",
-  "/images/image2.jpg",
-  "/images/image3.jpg",
-  "/images/image4.jpg",
-  "/images/image5.jpg",
-  "/images/image6.jpg",
-  "/images/image7.jpg",
-  "/images/image8.jpg",
-  "/images/image9.jpg",
+  '/images/image1.jpg',
+  '/images/image2.jpg',
+  '/images/image3.jpg',
+  '/images/image4.jpg',
+  '/images/image5.jpg',
+  '/images/image6.jpg',
+  '/images/image7.jpg',
+  '/images/image8.jpg',
+  '/images/image9.jpg',
 ];
 
 export default function PropertiesPage() {
@@ -37,9 +36,13 @@ export default function PropertiesPage() {
   useEffect(() => {
     async function loadProperties() {
       try {
-        const res = await fetch('https://rentnest-backend-sage.vercel.app/api/properties');
+        const res = await fetch(
+          'https://rentnest-backend-sage.vercel.app/api/properties'
+        );
+
         const data = await res.json();
         const list = Array.isArray(data) ? data : data?.data || [];
+
         setProperties(list);
         setFiltered(list);
       } catch (err) {
@@ -48,6 +51,7 @@ export default function PropertiesPage() {
         setIsLoading(false);
       }
     }
+
     loadProperties();
   }, []);
 
@@ -72,19 +76,26 @@ export default function PropertiesPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
-      <h1 className="mb-6 text-3xl font-extrabold text-gray-900 dark:text-white">সব ভাড়ার প্রপার্টি খুঁজুন</h1>
+      <h1 className="mb-6 text-3xl font-extrabold text-gray-900 dark:text-white">
+        Find Your Perfect Rental Property
+      </h1>
 
       {/* Filter Sidebar & Search */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
         <aside className="h-fit rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-800">
-          <h2 className="mb-4 text-lg font-bold text-gray-900 dark:text-white">ফিল্টার করুন 🔍</h2>
+          <h2 className="mb-4 text-lg font-bold text-gray-900 dark:text-white">
+            Filter Properties 🔍
+          </h2>
 
           <div className="space-y-4">
             <div>
-              <label className="text-xs font-semibold text-gray-600 dark:text-gray-300">লোকেশন বা নাম</label>
+              <label className="text-xs font-semibold text-gray-600 dark:text-gray-300">
+                Location or Property Name
+              </label>
+
               <input
                 type="text"
-                placeholder="ঢাকা, ধানমন্ডি..."
+                placeholder="Dhaka, Dhanmondi..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900"
@@ -93,8 +104,9 @@ export default function PropertiesPage() {
 
             <div>
               <label className="text-xs font-semibold text-gray-600 dark:text-gray-300">
-                সর্বোচ্চ বাজেট: ৳{maxPrice.toLocaleString()}
+                Maximum Budget: ৳{maxPrice.toLocaleString()}
               </label>
+
               <input
                 type="range"
                 min="2000"
@@ -123,12 +135,15 @@ export default function PropertiesPage() {
           {isLoading ? (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {[1, 2, 3, 4, 5, 6].map((n) => (
-                <div key={n} className="h-72 animate-pulse rounded-xl bg-gray-200 dark:bg-gray-800" />
+                <div
+                  key={n}
+                  className="h-72 animate-pulse rounded-xl bg-gray-200 dark:bg-gray-800"
+                />
               ))}
             </div>
           ) : filtered.length === 0 ? (
             <div className="rounded-xl border border-dashed border-gray-300 py-12 text-center text-gray-500">
-              কোনো প্রপার্টি পাওয়া যায়নি।
+              No properties found.
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -141,23 +156,32 @@ export default function PropertiesPage() {
                     <Image
                       src={propertyImages[index % propertyImages.length]}
                       alt={item.title}
-                       loading={index === 0 ? "eager" : "lazy"}
+                      loading={index === 0 ? 'eager' : 'lazy'}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       fill
                       className="object-cover"
-                      
                     />
                   </div>
+
                   <div className="p-4">
-                    <h3 className="truncate font-bold text-gray-900 dark:text-white">{item.title}</h3>
-                    <p className="text-xs text-gray-500">{item.location}</p>
+                    <h3 className="truncate font-bold text-gray-900 dark:text-white">
+                      {item.title}
+                    </h3>
+
+                    <p className="text-xs text-gray-500">
+                      {item.location}
+                    </p>
+
                     <div className="mt-4 flex items-center justify-between">
-                      <span className="font-bold text-indigo-600">৳{item.price}</span>
+                      <span className="font-bold text-indigo-600">
+                        ৳{item.price}
+                      </span>
+
                       <Link
                         href={`/properties/${item.id}`}
                         className="rounded-md bg-indigo-600 px-3 py-1.5 text-xs text-white hover:bg-indigo-700"
                       >
-                        বিস্তারিত
+                        View Details
                       </Link>
                     </div>
                   </div>

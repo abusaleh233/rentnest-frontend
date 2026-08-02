@@ -11,9 +11,7 @@ export default function AuthLayout({
         <Link href="/" className="text-3xl font-black text-indigo-600 dark:text-indigo-400">
           RentNest 🏠
         </Link>
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-          আপনার পছন্দের বাসা খুঁজে পেতে বা সাবমিট করতে সাইন ইন করুন
-        </p>
+        
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">

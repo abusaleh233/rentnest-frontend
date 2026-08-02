@@ -60,14 +60,14 @@ export default function AdminDashboardPage() {
         <div>
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Admin Dashboard 🛡️</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            প্ল্যাটফর্মের সার্বিক অবস্থা এবং ইউজার ম্যানেজমেন্ট ওভারভিউ
+            Overview of the platform status and user management.
           </p>
         </div>
         <Link
           href="/dashboard/admin/users"
           className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 shadow"
         >
-          ইউজার ম্যানেজমেন্ট টেবিল 👥
+          User Management Table 👥
         </Link>
       </div>
 

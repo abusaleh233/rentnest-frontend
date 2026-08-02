@@ -6,7 +6,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { apiClient } from '../lib/api-client';
 
-
 interface UserProfile {
   name: string;
   email: string;
@@ -90,11 +89,21 @@ export default function DashboardLayout({
             icon: '📩',
           },
         ];
+
       case 'ADMIN':
         return [
-          { name: 'অ্যাডমিন ড্যাশবোর্ড', href: '/dashboard/admin', icon: '🛡️' },
-          { name: 'ইউজার ম্যানেজমেন্ট', href: '/dashboard/admin/users', icon: '👥' },
+          {
+            name: 'Admin Dashboard',
+            href: '/dashboard/admin',
+            icon: '🛡️',
+          },
+          {
+            name: 'User Management',
+            href: '/dashboard/admin/users',
+            icon: '👥',
+          },
         ];
+
       case 'USER':
       default:
         return [
@@ -128,21 +137,26 @@ export default function DashboardLayout({
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Sidebar */}
       <aside className="hidden w-64 flex-col border-r border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-800 md:flex">
-        <Link href="/" className="mb-8 flex items-center gap-2 text-2xl font-black text-indigo-600 dark:text-indigo-400">
+        <Link
+          href="/"
+          className="mb-8 flex items-center gap-2 text-2xl font-black text-indigo-600 dark:text-indigo-400"
+        >
           <span>RentNest</span> 🏠
         </Link>
 
         <nav className="flex-1 space-y-1.5">
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
+
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${isActive
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200 dark:shadow-none'
-                  : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
-                  }`}
+                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+                  isActive
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200 dark:shadow-none'
+                    : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
+                }`}
               >
                 <span>{link.icon}</span>
                 {link.name}
@@ -153,22 +167,29 @@ export default function DashboardLayout({
 
         <div className="border-t border-gray-200 pt-4 dark:border-gray-700">
           <div className="mb-3 px-2">
-            <p className="truncate text-sm font-bold text-gray-900 dark:text-white">{user?.name}</p>
-            <p className="truncate text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
+            <p className="truncate text-sm font-bold text-gray-900 dark:text-white">
+              {user?.name}
+            </p>
+
+            <p className="truncate text-xs text-gray-500 dark:text-gray-400">
+              {user?.email}
+            </p>
+
             <span className="mt-1 inline-block rounded bg-indigo-50 px-2 py-0.5 text-[10px] font-extrabold uppercase text-indigo-600 dark:bg-indigo-950 dark:text-indigo-300">
               {user?.role}
             </span>
           </div>
+
           <button
             onClick={handleLogout}
             className="flex w-full items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-xs font-bold text-red-600 transition hover:bg-red-100 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-400"
           >
-            <span>🚪</span> লগআউট
+            <span>🚪</span> Logout
           </button>
         </div>
       </aside>
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <div className="flex flex-1 flex-col overflow-x-hidden">
         <header className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 dark:border-gray-800 dark:bg-gray-800 md:px-8">
           <div className="flex items-center gap-3">
@@ -178,8 +199,13 @@ export default function DashboardLayout({
             >
               ☰
             </button>
+
             <h2 className="text-lg font-extrabold text-gray-800 dark:text-white">
-              {user?.role === 'ADMIN' ? 'অ্যাডমিন প্যানেল' : user?.role === 'OWNER' ? 'মালিক প্যানেল' : 'ভাড়াটিয়া ড্যাশবোর্ড'}
+              {user?.role === 'ADMIN'
+                ? 'Admin Panel'
+                : user?.role === 'OWNER'
+                ? 'Owner Panel'
+                : 'Tenant Dashboard'}
             </h2>
           </div>
 
@@ -187,7 +213,7 @@ export default function DashboardLayout({
             href="/"
             className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
           >
-            হোমপেজে যান 🏠
+            Go to Homepage 🏠
           </Link>
         </header>
 
@@ -199,21 +225,23 @@ export default function DashboardLayout({
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold ${pathname === link.href
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
-                    }`}
+                  className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold ${
+                    pathname === link.href
+                      ? 'bg-indigo-600 text-white'
+                      : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  }`}
                 >
                   <span>{link.icon}</span>
                   {link.name}
                 </Link>
               ))}
             </nav>
+
             <button
               onClick={handleLogout}
               className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-red-600 py-2 text-xs font-bold text-white"
             >
-              লগআউট
+              Logout
             </button>
           </div>
         )}

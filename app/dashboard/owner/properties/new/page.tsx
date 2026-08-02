@@ -9,19 +9,19 @@ import Cookies from 'js-cookie';
 
 const propertySchema = z.object({
   title: z.string().min(5, {
-    message: 'টাইটেল অন্তত ৫ অক্ষরের হতে হবে',
+    message: 'Title must be at least 5 characters long',
   }),
   description: z.string().min(10, {
-    message: 'বিবরণ অন্তত ১০ অক্ষরের হতে হবে',
+    message: 'Description must be at least 10 characters long',
   }),
   price: z.coerce.number().min(1000, {
-    message: 'দাম সঠিক নয়',
+    message: 'Please enter a valid price',
   }),
   location: z.string().min(3, {
-    message: 'লোকেশন লিখুন',
+    message: 'Please enter the property location',
   }),
   categoryId: z.string().min(1, {
-    message: 'ক্যাটাগরি নির্বাচন করুন',
+    message: 'Please select a category',
   }),
 });
 
@@ -93,12 +93,12 @@ export default function CreatePropertyPage() {
       const result = await res.json();
 
       if (!res.ok) {
-        throw new Error(result.message || 'প্রপার্টি তৈরি করা যায়নি');
+        throw new Error(result.message || 'Failed to create property.');
       }
 
       router.push('/dashboard/owner');
     } catch (err: any) {
-      setError(err.message || 'কিছু একটা ভুল হয়েছে');
+      setError(err.message || 'Something went wrong.');
     } finally {
       setIsLoading(false);
     }
@@ -107,11 +107,11 @@ export default function CreatePropertyPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">
-        নতুন প্রপার্টি লিস্ট করুন 🏠
+         List a New Property  🏠
       </h1>
 
       <p className="mt-2 text-sm text-gray-500">
-        আপনার প্রপার্টির তথ্য পূরণ করে প্রকাশ করুন
+        Fill in your property details and publish your listing.
       </p>
 
       {error && (
@@ -124,13 +124,13 @@ export default function CreatePropertyPage() {
         {/* Title */}
         <div>
           <label className="mb-1 block text-sm font-medium">
-            প্রপার্টি টাইটেল
+            Property Title
           </label>
 
           <input
             {...register('title')}
             type="text"
-            placeholder="২ বেডরুমের অ্যাপার্টমেন্ট"
+            placeholder="2 Bedroom Apartment"
             className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
           />
 
@@ -143,12 +143,12 @@ export default function CreatePropertyPage() {
 
         {/* Description */}
         <div>
-          <label className="mb-1 block text-sm font-medium">বিবরণ</label>
+          <label className="mb-1 block text-sm font-medium">Description</label>
 
           <textarea
             {...register('description')}
             rows={4}
-            placeholder="প্রপার্টির বিস্তারিত লিখুন..."
+            placeholder="Write a detailed description of your property..."
             className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
           />
 
@@ -162,7 +162,7 @@ export default function CreatePropertyPage() {
         {/* Price */}
         <div>
           <label className="mb-1 block text-sm font-medium">
-            মাসিক ভাড়া
+           Monthly Rent
           </label>
 
           <input
@@ -181,12 +181,12 @@ export default function CreatePropertyPage() {
 
         {/* Location */}
         <div>
-          <label className="mb-1 block text-sm font-medium">লোকেশন</label>
+          <label className="mb-1 block text-sm font-medium">Location</label>
 
           <input
             {...register('location')}
             type="text"
-            placeholder="মিরপুর ১০, ঢাকা"
+            placeholder="Mirpur 10, Dhaka"
             className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
           />
 
@@ -200,14 +200,14 @@ export default function CreatePropertyPage() {
         {/* Category */}
         <div>
           <label className="mb-1 block text-sm font-medium">
-            ক্যাটাগরি
+             Category
           </label>
 
           <select
             {...register('categoryId')}
             className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:outline-none"
           >
-            <option value="">ক্যাটাগরি নির্বাচন করুন</option>
+            <option value=""> Select a Category</option>
 
             {categories.map((category) => (
               <option key={category.id} value={category.id}>

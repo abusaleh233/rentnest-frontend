@@ -64,8 +64,8 @@ export default function OwnerRequestsPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
-      <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">ভাড়ার রিকোয়েস্টসমূহ 📩</h1>
-      <p className="mt-1 text-sm text-gray-500">আবেদনকারীদের রিকোয়েস্ট একসেপ্ট বা রিজেক্ট করুন</p>
+      <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white"> Rental Requests 📩</h1>
+      <p className="mt-1 text-sm text-gray-500">Review and approve or reject tenant rental requests.</p>
 
       {isLoading ? (
         <div className="mt-6 space-y-4">
@@ -75,7 +75,7 @@ export default function OwnerRequestsPage() {
         </div>
       ) : requests.length === 0 ? (
         <div className="mt-6 rounded-2xl border border-dashed border-gray-300 p-12 text-center">
-          কোনো রিকোয়েস্ট পাওয়া যায়নি।
+          No rental requests found.
         </div>
       ) : (
         <div className="mt-6 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-800">
@@ -83,10 +83,10 @@ export default function OwnerRequestsPage() {
             <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
               <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-4">আবেদনকারীর নাম</th>
-                  <th className="px-6 py-4">প্রপার্টি</th>
-                  <th className="px-6 py-4">স্ট্যাটাস</th>
-                  <th className="px-6 py-4 text-right">অ্যাকশন</th>
+                  <th className="px-6 py-4">Applicant</th>
+                  <th className="px-6 py-4">Property</th>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4 text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -129,7 +129,7 @@ export default function OwnerRequestsPage() {
                           </button>
                         </div>
                       ) : (
-                        <span className="text-xs text-gray-400">নির্ধারিত</span>
+                        <span className="text-xs text-gray-400">Completed</span>
                       )}
                     </td>
                   </tr>

@@ -8,7 +8,7 @@ RentNest is a modern Rental Property Management System where users can browse re
 
 ### Frontend
 
-> https://your-frontend-link.vercel.app
+> https:
 
 ### Backend
 
