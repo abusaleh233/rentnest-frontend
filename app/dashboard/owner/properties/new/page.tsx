@@ -25,7 +25,7 @@ const propertySchema = z.object({
   }),
 });
 
-type PropertyFormData = z.infer<typeof propertySchema>;
+type PropertyFormData = z.input<typeof propertySchema>;
 
 interface Category {
   id: string;
