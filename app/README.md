@@ -1,36 +1,134 @@
-# RentNest 🏠 - House Rental Web Application
+# 🏠 RentNest – Rental Property Management System
 
-RentNest is a full-stack modern rental platform that connects property owners with tenants. Built with **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS**, and **Zod**.
-
----
-
-## 🚀 Key Features
-
-- **Multi-Role Authentication**: Tenant (USER), Landlord (OWNER), and Admin (ADMIN).
-- **Property Discovery**: Search & filter properties by location and price range.
-- **Rental Request Workflow**: Tenants apply -> Landlords Approve/Reject -> Tenants Pay.
-- **Stripe Integration**: Secure payment handling for approved rental requests.
-- **Admin Management Panel**: Manage users, properties, and overall system status.
+RentNest is a modern Rental Property Management System where users can browse rental properties, send rental requests, make secure online payments, and manage their rentals. Property owners can manage properties and rental requests, while administrators can monitor and manage the entire platform.
 
 ---
 
-## 🛠️ Tech Stack
+# 🌐 Live Demo
 
-- **Framework**: Next.js 14 (App Router, Server & Client Components)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Form Handling & Validation**: React Hook Form, Zod Schema Validation
-- **State & HTTP**: Axios Client, Cookies (`js-cookie`)
+### Frontend
+
+> https:https://rentnest-frontend-ruby.vercel.app
+
+### Backend
+
+> https://rentnest-backend-sage.vercel.app/
 
 ---
 
-## 📁 Directory Structure
+# 📂 GitHub Repository
 
-```text
-├── app/                  # Next.js App Router Pages
-├── components/           # Reusable UI & Business Components
-├── hooks/                # Custom React Hooks
-├── lib/                  # Axios Client & Zod Schemas
-├── types/                # TypeScript Type Definitions
-├── middleware.ts         # Route Guard & Auth Middleware
-└── API_INTEGRATION.md    # API Mapping Docs
+### Frontend Repository
+
+> https://github.com/abusaleh233/rentnest-frontend.git
+
+### Backend Repository
+
+> https://github.com/abusaleh233/rentnest-backend.git
+
+
+---
+
+# 📖 Project Overview
+
+RentNest is built to simplify the rental process for both tenants and property owners.
+
+The application provides:
+
+* Property browsing
+* Rental request management
+* Secure payment integration
+* Property management
+* User authentication
+* Role-based authorization
+* Admin dashboard
+
+---
+
+# ✨ Features
+
+## 👤 User
+
+* Register & Login
+* JWT Authentication
+* Browse Properties
+* Search & Filter Properties
+* View Property Details
+* Send Rental Request
+* View My Requests
+* View Rental Details
+* Make Payment using Stripe
+* Payment History
+* Responsive Dashboard
+
+---
+
+## 🏠 Owner
+
+* Owner Dashboard
+* Add Property
+* Update Property
+* Delete Property
+* View My Properties
+* View Rental Requests
+* Approve Request
+* Reject Request
+
+---
+
+## 🛡️ Admin
+
+* Admin Dashboard
+* Manage Users
+* Manage Properties
+* Manage Rental Requests
+* Manage Payments
+* Platform Monitoring
+
+---
+
+# 💳 Payment System
+
+* Stripe Payment Gateway
+* Secure Checkout
+* Payment Success Page
+* Payment Failed Page
+* Payment History
+
+
+
+# 🔥 API Endpoints
+
+## Authentication
+
+* POST /api/auth/register
+* POST /api/auth/login
+* GET /api/users/me
+
+---
+
+## Property
+
+* GET /api/properties
+* GET /api/properties/:id
+* POST /api/properties
+* PATCH /api/properties/:id
+* DELETE /api/properties/:id
+
+---
+
+## Rental
+
+* POST /api/rentals
+* GET /api/rentals
+* GET /api/rentals/:id
+
+---
+
+## Payment
+
+* POST /api/payments/create-intent
+* GET /api/payments/history
+
+---
+
