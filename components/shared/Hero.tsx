@@ -9,9 +9,7 @@ export default function Hero() {
 
           <div>
 
-            <span className="rounded-full bg-white/20 px-4 py-2 text-sm">
-              🏠 Bangladesh's Trusted Rental Platform
-            </span>
+            
 
             <h1 className="mt-6 text-6xl font-black leading-tight">
 
