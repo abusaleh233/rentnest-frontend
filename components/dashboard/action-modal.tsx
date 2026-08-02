@@ -33,7 +33,7 @@ export function ActionModal({
             disabled={isLoading}
             className="rounded-lg border border-gray-300 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300"
           >
-            বাতিল
+            Cancel
           </button>
           <button
             onClick={onConfirm}
