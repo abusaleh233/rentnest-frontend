@@ -40,7 +40,7 @@ export function ActionModal({
             disabled={isLoading}
             className="rounded-lg bg-red-600 px-4 py-2 text-xs font-semibold text-white hover:bg-red-700 disabled:opacity-50"
           >
-            {isLoading ? 'প্রসেসিং...' : confirmText}
+            {isLoading ? 'Processing...' : confirmText}
           </button>
         </div>
       </div>
