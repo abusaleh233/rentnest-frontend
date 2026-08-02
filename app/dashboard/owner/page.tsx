@@ -36,13 +36,13 @@ export default function OwnerDashboardPage() {
     try {
       const token = Cookies.get('token');
 
-      // Token না থাকলে loading বন্ধ করে ফাংশন বের হবে
+      
       if (!token) {
         setLoading(false);
         return;
       }
 
-      // Safe JWT decoding
+      
       let decoded: JwtPayload;
       try {
         decoded = jwtDecode<JwtPayload>(token);
@@ -73,7 +73,7 @@ export default function OwnerDashboardPage() {
     } catch (error) {
       console.error('Error loading dashboard data:', error);
     } finally {
-      // এটি নিশ্চিত করবে যে যেকোনো অবস্থাতেই loading বন্ধ হবে
+      
       setLoading(false);
     }
   }
