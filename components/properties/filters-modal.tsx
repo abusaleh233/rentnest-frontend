@@ -31,7 +31,7 @@ export function FiltersModal({ isOpen, onClose, onApply }: FiltersModalProps) {
             <input
               name="location"
               type="text"
-              placeholder="মিরপুর, উত্তরা..."
+              placeholder="Mirpur, Uttora..."
               className="mt-1 w-full rounded-lg border border-gray-300 p-2 text-sm dark:border-gray-700 dark:bg-gray-900"
             />
           </div>
